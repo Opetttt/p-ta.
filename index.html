@@ -7,71 +7,76 @@
   
   <title>P.TA</title>
   <link rel="manifest" href="./manifest.json">
-  <meta name="theme-color" content="1769aa">
-  <link rel="apple-touch-icon" href=".icon-192.png
+  <meta name="theme-color" content="#1769aa">
+  <link rel="apple-touch-icon" href="./icon-192.png">
 
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
   >
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
+  
+<style>
+  * {
+    box-sizing: border-box;
+  }
 
-    h2 {
-      text-align: center;
-      margin: 15px 0;
-    }
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+  }
 
-    #search-box {
-      display: flex;
-      gap: 8px;
-      padding: 10px;
-    }
+  h2 {
+    text-align: center;
+    margin: 15px 0;
+  }
 
-    #place {
-      flex: 1;
-      min-width: 0;
-      padding: 12px;
-      font-size: 16px;
-      border: 1px solid #aaa;
-      border-radius: 8px;
-    }
+  #search-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px;
+  }
 
-    button {
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      background: #1769aa;
-      color: white;
-      font-size: 15px;
-    }
+  #place {
+    flex: 1 1 140px;
+    min-width: 0;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #aaa;
+    border-radius: 8px;
+  }
 
-    #status {
-      padding: 0 12px 10px;
-      font-size: 14px;
-    }
+  button {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #1769aa;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+  }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  min-height: 100%;
-  overflow-x: hidden;
-}
+  #status {
+    padding: 0 12px 10px;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+  }
 
-#map {
-  height: 65vh;
-  height: 65dvh;
-  min-height: 300px;
-  width: 100%;
-}
-    }
-  </style>
+  #map {
+    height: 65vh;
+    height: 65dvh;
+    min-height: 300px;
+    width: 100%;
+    background: #e8edf0;
+  }
+</style>
+
 </head>
 
 <body>
