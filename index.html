@@ -9,7 +9,7 @@
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
+  >
 
   <style>
     body {
@@ -19,11 +19,41 @@
 
     h2 {
       text-align: center;
+      margin: 15px 0;
+    }
+
+    #search-box {
+      display: flex;
+      gap: 8px;
+      padding: 10px;
+    }
+
+    #place {
+      flex: 1;
+      min-width: 0;
       padding: 12px;
+      font-size: 16px;
+      border: 1px solid #aaa;
+      border-radius: 8px;
+    }
+
+    button {
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #1769aa;
+      color: white;
+      font-size: 15px;
+    }
+
+    #status {
+      padding: 0 12px 10px;
+      font-size: 14px;
     }
 
     #map {
-      height: 75vh;
+      height: 70vh;
+      min-height: 350px;
       width: 100%;
     }
   </style>
@@ -31,14 +61,23 @@
 
 <body>
   <h2>🗺️ P.TA</h2>
+
+  <div id="search-box">
+    <input
+      id="place"
+      type="search"
+      placeholder="Cari tempat, contoh: KLCC"
+    >
+    <button onclick="searchPlace()">Cari</button>
+  </div>
+
+  <div id="status">Taip nama tempat untuk memulakan carian.</div>
   <div id="map"></div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
-    const map = L.map('map').setView(
-      [4.2105, 101.9758], 6
-    );
+    const map = L.map('map').setView([4.2105, 101.9758], 6);
 
     L.tileLayer(
       'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -49,8 +88,67 @@
 
     L.marker([4.2105, 101.9758])
       .addTo(map)
-      .bindPopup('Selamat datang ke P.TA!')
-      .openPopup();
+      .bindPopup('Selamat datang ke P.TA!');
+
+    let searchMarker = null;
+
+    async function searchPlace() {
+      const place = document.getElementById('place').value.trim();
+      const status = document.getElementById('status');
+
+      if (!place) {
+        status.textContent = 'Sila masukkan nama tempat dahulu.';
+        return;
+      }
+
+      status.textContent = 'Sedang mencari tempat...';
+
+      try {
+        const url =
+          'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q='
+          + encodeURIComponent(place);
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          throw new Error('Carian tidak berjaya.');
+        }
+
+        const results = await response.json();
+
+        if (results.length === 0) {
+          status.textContent = 'Tempat tidak ditemui. Cuba nama lain.';
+          return;
+        }
+
+        const result = results[0];
+        const lat = Number(result.lat);
+        const lon = Number(result.lon);
+
+        map.setView([lat, lon], 16);
+
+        if (searchMarker) {
+          map.removeLayer(searchMarker);
+        }
+
+        searchMarker = L.marker([lat, lon])
+          .addTo(map)
+          .bindPopup(result.display_name)
+          .openPopup();
+
+        status.textContent = 'Lokasi ditemui: ' + result.display_name;
+
+      } catch (error) {
+        status.textContent =
+          'Carian gagal. Periksa sambungan internet dan cuba lagi.';
+      }
+    }
+
+    document.getElementById('place').addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') {
+        searchPlace();
+      }
+    });
   </script>
 </body>
 </html>
