@@ -69,6 +69,7 @@
       placeholder="Cari tempat, contoh: KLCC"
     >
     <button onclick="searchPlace()">Cari</button>
+    <button oneclick="findMyLocation()">Lokasi Saya</button>  
   </div>
 
   <div id="status">Taip nama tempat untuk memulakan carian.</div>
@@ -149,6 +150,72 @@
         searchPlace();
       }
     });
+
+
+let gpsMarker = null;
+let gpsCircle = null;
+
+function findMyLocation() {
+  const status = document.getElementById('status');
+
+  if (!navigator.geolocation) {
+    status.textContent = 'Telefon atau pelayar tidak menyokong GPS.';
+    return;
+  }
+
+  status.textContent = 'Sedang mendapatkan lokasi anda...';
+
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      const accuracy = position.coords.accuracy;
+
+      map.setView([lat, lon], 16);
+
+      if (gpsMarker) {
+        map.removeLayer(gpsMarker);
+      }
+
+      if (gpsCircle) {
+        map.removeLayer(gpsCircle);
+      }
+
+      gpsMarker = L.marker([lat, lon])
+        .addTo(map)
+        .bindPopup('📍 Lokasi semasa anda')
+        .openPopup();
+
+      gpsCircle = L.circle([lat, lon], {
+        radius: accuracy,
+        color: 'blue',
+        fillOpacity: 0.1
+      }).addTo(map);
+
+      status.textContent =
+        'Lokasi berjaya dikesan. Anggaran ketepatan: ' +
+        Math.round(accuracy) + ' meter.';
+    },
+
+    function(error) {
+      if (error.code === 1) {
+        status.textContent =
+          'Kebenaran lokasi ditolak. Benarkan akses lokasi pada telefon.';
+      } else if (error.code === 2) {
+        status.textContent = 'Lokasi tidak dapat dikesan. Cuba lagi.';
+      } else {
+        status.textContent =
+          'Masa mendapatkan lokasi tamat. Cuba tekan Lokasi Saya lagi.';
+      }
+    },
+
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0
+    }
+  );
+}    
   </script>
 </body>
 </html>
