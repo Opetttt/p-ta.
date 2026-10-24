@@ -55,10 +55,21 @@
       font-size: 14px;
     }
 
-    #map {
-      height: 70vh;
-      min-height: 350px;
-      width: 100%;
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+#map {
+  height: 65vh;
+  height: 65dvh;
+  min-height: 350px;
+  width: 100%;
+}
     }
   </style>
 </head>
@@ -90,6 +101,10 @@
         attribution: '&copy; OpenStreetMap contributors'
       }
     ).addTo(map);
+
+    setTimeout(function() {
+      map.invalidateSize();
+    }, 300);
 
     L.marker([4.2105, 101.9758])
       .addTo(map)
