@@ -1,0 +1,10 @@
+{
+  "name": "P.TA",
+  "short_name": "P.TA",
+  "description": "Aplikasi peta dengan carian tempat dan lokasi semasa",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1769aa"
+}
